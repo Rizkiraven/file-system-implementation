@@ -20,6 +20,16 @@ public class Main {
                 fileSystem.dir();
             } else if (input.startsWith("create ")) {
                 fileSystem.createFile(input.substring(7).trim());
+            } else if (input.startsWith("rm ")) {
+                fileSystem.rm(input.substring(3).trim());
+            } else if (input.startsWith("rmdir ")) {
+                fileSystem.rmdir(input.substring(6).trim());
+            } else if (input.equals("pwd")) {
+                fileSystem.pwd();
+            } else if (input.startsWith("cat ")) {
+                fileSystem.cat(input.substring(4).trim());
+            } else if (input.equals("help")) {
+                fileSystem.help();
             } else {
                 System.out.println("Invalid command");
             }

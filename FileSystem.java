@@ -22,7 +22,9 @@ public class FileSystem {
     }
 
     public void cd(String name) {
-        if ("..".equals(name)) {
+        if ("/".equals(name)) {
+            current = root;
+        } else if ("..".equals(name)) {
             if (current.getParent() != null) {
                 current = current.getParent();
             } else {
@@ -37,7 +39,10 @@ public class FileSystem {
 
     public void ls() {
         for (String dirName : current.getChildren().keySet()) {
-            System.out.println(dirName);
+            System.out.println(dirName + " <DIR>");
+        }
+        for (String fileName : current.getFiles().keySet()) {
+            System.out.println(fileName);
         }
     }
 
@@ -80,6 +85,54 @@ public class FileSystem {
 
         System.out.printf("               %d File(s)     %8d bytes\n", totalFiles, totalSize);
         System.out.printf("               %d Dir(s) %13d bytes free\n", current.getChildren().size() + 2, freeSpace);
+    }
+
+    public void rm(String name) {
+        if (current.hasFile(name)) {
+            File file = current.getFiles().remove(name);
+            freeSpace += file.getSize();
+            System.out.println("File deleted");
+        } else {
+            System.out.println("File not found");
+        }
+    }
+
+    public void rmdir(String name) {
+        if (current.hasChild(name)) {
+            current.getChildren().remove(name);
+            System.out.println("Directory deleted");
+        } else {
+            System.out.println("Directory not found");
+        }
+    }
+
+    public void pwd() {
+        System.out.println(current.getFullPath());
+    }
+
+    public void cat(String name) {
+        if (current.hasFile(name)) {
+            System.out.println("Displaying contents of file: " + name);
+            // Assuming file has content, here we just print the file name as content
+            System.out.println("Content of " + name);
+        } else {
+            System.out.println("File not found");
+        }
+    }
+
+    public void help() {
+        System.out.println("Available commands:");
+        System.out.println("mkdir <name> - Create a new directory");
+        System.out.println("cd <name> - Change directory");
+        System.out.println("ls - List directories and files");
+        System.out.println("dir - Detailed list of directories and files");
+        System.out.println("create <name> - Create a new file");
+        System.out.println("rm <name> - Remove a file");
+        System.out.println("rmdir <name> - Remove a directory");
+        System.out.println("pwd - Print working directory");
+        System.out.println("cat <name> - Display file contents");
+        System.out.println("help - Display this help message");
+        System.out.println("exit - Exit the file system");
     }
 
     public void prompt() {
